@@ -7,6 +7,7 @@ const manifest = {
   id: 'com.bleach.drive',
   version: '1.0.0',
   name: 'Bleach Drive',
+  logo: 'https://raw.githubusercontent.com/xami666999-lgtm/bleach-drive/main/covers/bleach-kai.jpg',
   description: 'Bleach Kai from Google Drive. Substitute Soul Reaper, Soul Society, Arrancar, Hueco Mundo, Turn Back the Pendulum, Battle of Karakura, Fullbring.',
   resources: ['catalog', 'meta', 'stream'],
   types: ['series'],
