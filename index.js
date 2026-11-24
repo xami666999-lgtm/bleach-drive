@@ -20,26 +20,30 @@ app.use((req, res, next) => { res.set('Access-Control-Allow-Origin', '*'); next(
 
 app.get('/manifest.json', (_req, res) => res.json(manifest))
 
+const POSTER = 'https://raw.githubusercontent.com/xami666999-lgtm/bleach-drive/main/covers/bleach-kai.jpg'
+const DESC = 'Bleach Kai. A tighter cut of the series covering Substitute Soul Reaper, Soul Society, Arrancar, Hueco Mundo, Turn Back the Pendulum, the Battle of Karakura, and Fullbring.'
+
 app.get('/catalog/series/bleach.json', (req, res) => {
-  const q = (req.query.search || '').toLowerCase()
-  const metas = seasons
-    .filter((s) => !q || s.name.toLowerCase().includes(q))
-    .map((s) => ({ id: 'bleach:' + s.id, type: 'series', name: s.name }))
-  res.json({ metas })
+  res.json({ metas: [{ id: 'bleach', type: 'series', name: 'Bleach Kai', poster: POSTER, description: DESC }] })
 })
 
 app.get('/meta/series/:id.json', (req, res) => {
-  const sid = req.params.id.replace('bleach:', '')
-  const season = seasons.find((s) => s.id === sid)
-  if (!season) return res.json({ meta: { id: req.params.id, type: 'series', name: 'Bleach' } })
-  const eps = (episodes[sid] || []).map((e, i) => ({
-    id: 'bleach:' + sid + ':' + e[0],
-    title: e[1],
-    season: 1,
-    episode: i + 1,
-    overview: e[3] || '',
-  }))
-  res.json({ meta: { id: req.params.id, type: 'series', name: season.name, videos: eps } })
+  const videos = []
+  let n = 1
+  const seasonNum = { s1: 1, s2: 2, s3: 3, s4: 4, s5: 5, s6: 6, s7: 7, bonus: 8 }
+  const seasonName = { s1: 'Substitute Soul Reaper', s2: 'Soul Society', s3: 'Arrancar', s4: 'Hueco Mundo', s5: 'Turn Back the Pendulum', s6: 'Battle of Karakura', s7: 'Fullbring', bonus: 'Bonus' }
+  for (const sid of Object.keys(episodes)) {
+    for (const e of episodes[sid]) {
+      videos.push({
+        id: 'bleach:' + sid + ':' + e[0],
+        title: (seasonName[sid] || sid) + ' - ' + e[1],
+        season: seasonNum[sid] || 1,
+        episode: n++,
+        overview: e[3] || '',
+      })
+    }
+  }
+  res.json({ meta: { id: 'bleach', type: 'series', name: 'Bleach Kai', poster: POSTER, description: DESC, videos } })
 })
 
 function base(req) {
